@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh mục</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        table { border-collapse: collapse; width: 60%; }
+        th, td { border: 1px solid #ccc; padding: 8px 14px; text-align: left; }
+        th { background: #4CAF50; color: white; }
+        a.btn { padding: 6px 12px; background: #008CBA; color: white;
+                text-decoration: none; border-radius: 4px; margin-right: 4px; }
+        a.btn-danger { background: #e53935; }
+        nav { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="btn" th:href="@{/categories}">Danh mục</a>
+    <a class="btn" th:href="@{/products}">Sản phẩm</a>
+</nav>
+
+<h1>Danh sách danh mục</h1>
+
+<a class="btn" th:href="@{/categories/new}">+ Thêm danh mục</a>
+<br/><br/>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Tên danh mục</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="c : ${categories}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.name}"></td>
+            <td>
+                <a class="btn" th:href="@{/categories/{id}/edit(id=${c.id})}">Sửa</a>
+                <a class="btn btn-danger"
+                   th:href="@{/categories/{id}/delete(id=${c.id})}"
+                   onclick="return confirm('Xóa danh mục này?')">Xóa</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(categories)}">
+            <td colspan="3" style="text-align:center">Chưa có danh mục nào</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
