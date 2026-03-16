@@ -3,32 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${pageTitle}">Form danh mục</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-weight: bold; margin-bottom: 4px; }
-        input[type=text] { width: 300px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-        .error { color: red; font-size: 13px; }
-        button { padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        a { margin-left: 10px; color: #555; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/worldclass.css}">
 </head>
-<body>
+<body class="worldclass">
+<div class="wc-shell">
+    <section class="wc-hero">
+        <h1 class="wc-title" th:text="${pageTitle}">Form danh mục</h1>
+        <p class="wc-subtitle">Thiết lập danh mục với biểu mẫu tối giản, tinh tế và dễ thao tác.</p>
+    </section>
 
-<h1 th:text="${pageTitle}">Form danh mục</h1>
+    <section class="wc-panel">
+        <form th:action="@{/categories/save}" th:object="${category}" method="post">
+            <input type="hidden" th:field="*{id}"/>
 
-<form th:action="@{/categories/save}" th:object="${category}" method="post">
-    <input type="hidden" th:field="*{id}"/>
+            <div style="margin-bottom: 12px;">
+                <label>Tên danh mục *</label>
+                <input class="wc-input" style="width:100%;" type="text" th:field="*{name}" placeholder="VD: Điện tử"/>
+                <span style="color:#a93535; font-size:13px;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            </div>
 
-    <div class="form-group">
-        <label>Tên danh mục *</label>
-        <input type="text" th:field="*{name}" placeholder="VD: Điện tử"/>
-        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-    </div>
-
-    <button type="submit">Lưu</button>
-    <a th:href="@{/categories}">← Quay lại</a>
-</form>
-
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="wc-btn" type="submit">Lưu</button>
+                <a class="wc-btn ghost" th:href="@{/categories}">← Quay lại</a>
+            </div>
+        </form>
+    </section>
+</div>
+<script th:src="@{/js/worldclass.js}"></script>
+ 
 </body>
 </html>

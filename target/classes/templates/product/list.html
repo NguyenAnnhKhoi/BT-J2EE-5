@@ -1,74 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Sản phẩm</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
-        th { background: #4CAF50; color: white; }
-        a.btn { padding: 6px 12px; background: #008CBA; color: white;
-                text-decoration: none; border-radius: 4px; margin-right: 4px; }
-        a.btn-danger { background: #e53935; }
-        nav { margin-bottom: 20px; }
-        .search-bar { margin-bottom: 14px; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/worldclass.css}">
 </head>
-<body>
+<body class="worldclass">
+<div class="wc-shell">
+    <div class="wc-topbar">
+        <a class="wc-brand" th:href="@{/products}">Maison Product</a>
+        <div class="wc-nav">
+            <a class="wc-chip" th:href="@{/products}">Sản phẩm</a>
+            <a class="wc-chip" th:href="@{/categories}">Danh mục</a>
+            <span class="wc-user" sec:authorize="isAuthenticated()">Xin chào, <b sec:authentication="name"></b></span>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button class="wc-chip" type="submit">Đăng xuất</button>
+            </form>
+        </div>
+    </div>
 
-<nav>
-    <a class="btn" th:href="@{/categories}">Danh mục</a>
-    <a class="btn" th:href="@{/products}">Sản phẩm</a>
-</nav>
+    <section class="wc-hero">
+        <h1 class="wc-title">Bảng điều phối sản phẩm</h1>
+        <p class="wc-subtitle">Không gian quản trị tối ưu cho hiệu suất và thẩm mỹ. Chuyển động mềm, bố cục sắc nét, trải nghiệm sang trọng chuẩn enterprise.</p>
+    </section>
 
-<h1>Danh sách sản phẩm</h1>
+    <section class="wc-panel">
+        <div class="wc-toolbar">
+            <form th:action="@{/products}" method="get" style="display:flex; gap:8px; flex-wrap:wrap;">
+                <input class="wc-input" type="text" name="search" th:value="${search}" placeholder="Tìm theo tên..."/>
+                <button class="wc-btn" type="submit">Tìm</button>
+                <a class="wc-btn ghost" th:href="@{/products}">Xóa lọc</a>
+            </form>
+            <a class="wc-btn" th:href="@{/products/add}" sec:authorize="hasRole('ADMIN')">+ Thêm sản phẩm</a>
+        </div>
 
-<div class="search-bar">
-    <form th:action="@{/products}" method="get">
-        <input type="text" name="search" th:value="${search}" placeholder="Tìm theo tên..."/>
-        <button type="submit">Tìm</button>
-        <a th:href="@{/products}">Xóa filter</a>
-    </form>
+        <div class="wc-table-wrap">
+            <table class="wc-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Hình ảnh</th>
+                    <th>Danh mục</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${products}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.price}"></td>
+                    <td>
+                        <img class="wc-thumb" th:src="${p.image}" alt="product image" onerror="this.src='https://via.placeholder.com/80'"/>
+                    </td>
+                    <td th:text="${p.category.name}"></td>
+                    <td>
+                        <div class="wc-actions">
+                            <a class="wc-btn ghost" th:href="@{/products/{id}(id=${p.id})}">Chi tiết</a>
+                            <a class="wc-btn" th:href="@{/products/edit/{id}(id=${p.id})}" sec:authorize="hasRole('ADMIN')">Sửa</a>
+                            <a class="wc-btn danger" th:href="@{/products/delete/{id}(id=${p.id})}" sec:authorize="hasRole('ADMIN')" onclick="return confirm('Xóa sản phẩm này?')">Xóa</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(products)}">
+                    <td colspan="6" class="wc-empty">Chưa có sản phẩm nào</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
-
-<a class="btn" th:href="@{/products/add}">+ Thêm sản phẩm</a>
-<br/><br/>
-
-<table>
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Tên sản phẩm</th>
-            <th>Giá</th>
-            <th>Hình ảnh</th>
-            <th>Danh mục</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="p : ${products}">
-            <td th:text="${p.id}"></td>
-            <td th:text="${p.name}"></td>
-            <td th:text="${p.price}"></td>
-            <td>
-                <img th:src="${p.image}" alt="product image"
-                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;"
-                     onerror="this.src='https://via.placeholder.com/80'"/>
-            </td>
-            <td th:text="${p.category.name}"></td>
-            <td>
-                <a class="btn" th:href="@{/products/edit/{id}(id=${p.id})}">Sửa</a>
-                <a class="btn btn-danger"
-                   th:href="@{/products/delete/{id}(id=${p.id})}"
-                   onclick="return confirm('Xóa sản phẩm này?')">Xóa</a>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(products)}">
-            <td colspan="6" style="text-align:center">Chưa có sản phẩm nào</td>
-        </tr>
-    </tbody>
-</table>
-
+<script th:src="@{/js/worldclass.js}"></script>
 </body>
 </html>

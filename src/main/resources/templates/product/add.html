@@ -1,35 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{_layout}">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"> <title>Add Product</title>
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/worldclass.css}">
 </head>
-<body>
-<div layout:fragment="content" class="container body-content">
-    <h2>Add Product</h2>
-    <form th:action="@{/products/save}" th:object="${product}" method="post" class="form">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Product Name">
-        </div>
-        <div class="form-group">
-            <label for="image">Image URL:</label>
-            <input class="form-control" type="text" th:field="*{image}" id="image" placeholder="http://image.jpg">
-        </div>
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <input class="form-control" type="number" th:field="*{price}" id="price" placeholder="Price">
-        </div>
-        <div class="form-group">
-            <label for="category">Category:</label>
-            <select name="categoryId" class="form-control" id="categoryId">
-                <option th:each="cat : ${categories}"
-                        th:value="${cat.id}" th:text="${cat.name}"></option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-success">Add Product</button>
-    </form>
+<body class="worldclass">
+<div class="wc-shell">
+    <section class="wc-hero">
+        <h1 class="wc-title">Thêm sản phẩm</h1>
+        <p class="wc-subtitle">Tạo sản phẩm mới với biểu mẫu chuẩn thẩm mỹ cao cấp.</p>
+    </section>
+
+    <section class="wc-panel">
+        <form th:action="@{/products/save}" th:object="${product}" method="post">
+            <div style="margin-bottom:12px;">
+                <label for="name">Tên sản phẩm</label>
+                <input class="wc-input" style="width:100%;" type="text" th:field="*{name}" id="name" placeholder="Ví dụ: Đồng hồ Heritage">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label for="image">Link ảnh</label>
+                <input class="wc-input" style="width:100%;" type="text" th:field="*{image}" id="image" placeholder="https://...">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label for="price">Giá</label>
+                <input class="wc-input" style="width:100%;" type="number" th:field="*{price}" id="price" placeholder="Giá sản phẩm">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label for="categoryId">Danh mục</label>
+                <select name="categoryId" class="wc-input" style="width:100%;" id="categoryId">
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="submit" class="wc-btn">Lưu sản phẩm</button>
+                <a th:href="@{/products}" class="wc-btn ghost">← Quay lại</a>
+            </div>
+        </form>
+    </section>
 </div>
+<script th:src="@{/js/worldclass.js}"></script>
 </body>
 </html>

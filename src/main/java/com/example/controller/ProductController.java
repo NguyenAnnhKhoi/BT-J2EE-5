@@ -27,6 +27,12 @@ public class ProductController {
         return "product/list"; // list.html trong templates/product
     }
 
+    @GetMapping("/{id}")
+    public String productDetail(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "product/detail";
+    }
+
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("product", new Product());
@@ -36,7 +42,7 @@ public class ProductController {
 
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute("product") Product product,
-                              @RequestParam("categoryId") int categoryId) {
+            @RequestParam("categoryId") int categoryId) {
         product.setCategory(categoryService.getCategoryById(categoryId));
         productService.saveProduct(product);
         return "redirect:/products";
